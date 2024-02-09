@@ -9,6 +9,9 @@ const char* menuOptions[MENU_ITEMS] = {"Spy-Mic", "BadBT", "Option 3", "Option 4
 const char* randomTexts[MENU_ITEMS] = {"Random Text 1", "Random Text 2", "Random Text 3", "Random Text 4"};
 int selectedOption = 0;
 
+// Declare the function prototype for executeBluetoothKeyboard
+void executeBluetoothKeyboard();
+
 void setup() {
   M5.begin();
   M5.Lcd.setRotation(5);
@@ -162,9 +165,31 @@ void nextOption() {
 }
 
 void executeOption() {
-  // Here you can define the actions to be performed for each menu option
-  // For simplicity, let's just print the selected option and a random text to Serial
-  Serial.print(menuOptions[selectedOption]);
-  Serial.print(": ");
-  Serial.println(randomTexts[selectedOption]);
+  if (selectedOption == 1) { // Check if "BadBT" option is selected
+    const char* startBadBt= "Starting BadBT...";
+    int textBadBtLenght = strlen(startBadBt); // Length of the message
+
+    M5.Lcd.fillScreen(TFT_BLACK);
+    M5.Lcd.setTextColor(TFT_CYAN);
+
+    // Type out boot message slowly
+    int cursorX = 50; // Initial x-position of the cursor
+    for (int i = 0; i < textBadBtLenght; i++) {
+      M5.Lcd.setCursor(cursorX, 50); // Set the cursor position
+      M5.Lcd.print(startBadBt[i]); // Print a character of the boot message
+      delay(40); // Typing speed (40ms delay between each character)
+      cursorX += M5.Lcd.textWidth(String(startBadBt[i]).c_str()) + 2; // Move cursor to the right
+    }
+
+    delay(80);
+
+    // Execute Bluetooth keyboard code
+    executeBluetoothKeyboard();
+  } else {
+    // Here you can define the actions to be performed for each menu option
+    // For simplicity, let's just print the selected option and a random text to Serial
+    Serial.print(menuOptions[selectedOption]);
+    Serial.print(": ");
+    Serial.println(randomTexts[selectedOption]);
+  }
 }
